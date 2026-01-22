@@ -158,6 +158,7 @@ async function ghlRequest(path, { method = "GET", body } = {}) {
       throw err;
     }
 
+    
     return data;
   } catch (err) {
     console.error(`GHL Request Error: ${err.message}`);
