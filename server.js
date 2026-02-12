@@ -175,9 +175,14 @@ app.post("/webhooks/lunacal", async (req, res) => {
     const customFields = extractCustomFields(payload);
 
     // Identify Calendar ID
-    const organizerEmail = payload?.organizer?.email?.toLowerCase();
+    let organizerEmail = payload?.organizer?.email?.toLowerCase() || "";
     console.log(`[Organizer Email] ${organizerEmail}`);
     
+    // Robust check: if it's suraj.kumar, treat .in and .com the same
+    if (organizerEmail.includes("suraj.kumar@digitalwebsolutions")) {
+        organizerEmail = "suraj.kumar@digitalwebsolutions.in";
+    }
+
     let targetCalendarId = process.env.GHL_CALENDAR_ID; // Default
 
     if (organizerEmail && calendarMap.has(organizerEmail)) {
