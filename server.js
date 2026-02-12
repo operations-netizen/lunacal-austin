@@ -71,11 +71,23 @@ function extractAttendee(payload) {
 function extractCustomFields(payload) {
   const fields = {};
   const responses = payload?.responses || {};
-  for (const [label, ghlKey] of fieldMap.entries()) {
+  
+  console.log("[Debug] Mapping labels to GHL keys:", Array.from(fieldMap.entries()));
+
+  for (const [targetLabel, ghlKey] of fieldMap.entries()) {
+    let found = false;
     for (const key in responses) {
-      if (responses[key]?.label === label && responses[key]?.value !== undefined) {
+      const actualLabel = responses[key]?.label || "";
+      // Clean both labels for a more robust match (trim and normalize whitespace)
+      if (actualLabel.trim().replace(/\s+/g, ' ') === targetLabel.trim().replace(/\s+/g, ' ')) {
         fields[ghlKey] = responses[key].value;
+        console.log(`[Debug] Match found! Label: "${targetLabel}" -> GHL Key: "${ghlKey}", Value: "${responses[key].value}"`);
+        found = true;
+        break;
       }
+    }
+    if (!found) {
+      console.log(`[Debug] No match found for label: "${targetLabel}"`);
     }
   }
   return fields;
