@@ -139,6 +139,7 @@ async function upsertContact({ name, email, phone, customFields }) {
     locationId: GHL_LOCATION_ID,
     name: String(name || "Unknown"),
     email: String(email || ""),
+    source: "Lunacal",
     ...(phone ? { phone: String(phone) } : {}),
     customFields: Object.entries(customFields).map(([key, value]) => {
       if (key.startsWith("contact.")) {
